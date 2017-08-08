@@ -1,0 +1,204 @@
+{# purpose of this template: product classes list view #}
+{% extends routeArea == 'admin' ? 'MUHelperModule::adminBase.html.twig' : 'MUHelperModule::base.html.twig' %}
+{% block title own ? __('My product classes') : __('Product classes list') %}
+{% block admin_page_icon 'list-alt' %}
+{% block content %}
+<div class="muhelpermodule-productclass muhelpermodule-view">
+
+    {{ block('page_nav_links') }}
+
+    {{ include('@MUHelperModule/ProductClass/viewQuickNav.html.twig', {workflowStateFilter: false}) }}{# see template file for available options #}
+
+    {% if routeArea == 'admin' %}
+    <form action="{{ path('muhelpermodule_productclass_' ~ routeArea ~ 'handleselectedentries') }}" method="post" id="productClassesViewForm" class="form-horizontal" role="form">
+        <div>
+    {% endif %}
+        <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover table-condensed">
+            <colgroup>
+                {% if routeArea == 'admin' %}
+                    <col id="cSelect" />
+                {% endif %}
+                <col id="cItemActions" />
+                <col id="cTitle" />
+                <col id="cDescription" />
+                <col id="cGetAmazonDatas" />
+                <col id="cOperation" />
+                <col id="cResponseGroup" />
+                <col id="cSearchIndex" />
+                <col id="cKeywordsForImport" />
+                <col id="cSortOfImport" />
+                <col id="cAdditionalFilter" />
+                <col id="cIncludeReviewSummary" />
+                <col id="cItemPageForImport" />
+                <col id="cAssociateKeyOfAmazon" />
+            </colgroup>
+            <thead>
+            <tr>
+                {% if routeArea == 'admin' %}
+                    <th id="hSelect" scope="col" class="{% if items|length > 0 %}fixed-column {% endif %}text-center z-w02">
+                        <input type="checkbox" class="muhelper-mass-toggle" />
+                    </th>
+                {% endif %}
+                <th id="hItemActions" scope="col" class="{% if items|length > 0 %}fixed-column {% endif %}z-order-unsorted z-w02">{{ __('Actions') }}</th>
+                <th id="hTitle" scope="col" class="text-left">
+                    <a href="{{ sort.title.url }}" title="{{ __f('Sort by %s', {'%s': 'title'}) }}" class="{{ sort.title.class }}">{{ __('Title') }}</a>
+                </th>
+                <th id="hDescription" scope="col" class="text-left">
+                    <a href="{{ sort.description.url }}" title="{{ __f('Sort by %s', {'%s': 'description'}) }}" class="{{ sort.description.class }}">{{ __('Description') }}</a>
+                </th>
+                <th id="hGetAmazonDatas" scope="col" class="text-center">
+                    <a href="{{ sort.getAmazonDatas.url }}" title="{{ __f('Sort by %s', {'%s': 'get amazon datas'}) }}" class="{{ sort.getAmazonDatas.class }}">{{ __('Get amazon datas') }}</a>
+                </th>
+                <th id="hOperation" scope="col" class="text-left">
+                    <a href="{{ sort.operation.url }}" title="{{ __f('Sort by %s', {'%s': 'operation'}) }}" class="{{ sort.operation.class }}">{{ __('Operation') }}</a>
+                </th>
+                <th id="hResponseGroup" scope="col" class="text-left">
+                    <a href="{{ sort.responseGroup.url }}" title="{{ __f('Sort by %s', {'%s': 'response group'}) }}" class="{{ sort.responseGroup.class }}">{{ __('Response group') }}</a>
+                </th>
+                <th id="hSearchIndex" scope="col" class="text-left">
+                    <a href="{{ sort.searchIndex.url }}" title="{{ __f('Sort by %s', {'%s': 'search index'}) }}" class="{{ sort.searchIndex.class }}">{{ __('Search index') }}</a>
+                </th>
+                <th id="hKeywordsForImport" scope="col" class="text-left">
+                    <a href="{{ sort.keywordsForImport.url }}" title="{{ __f('Sort by %s', {'%s': 'keywords for import'}) }}" class="{{ sort.keywordsForImport.class }}">{{ __('Keywords for import') }}</a>
+                </th>
+                <th id="hSortOfImport" scope="col" class="text-left">
+                    <a href="{{ sort.sortOfImport.url }}" title="{{ __f('Sort by %s', {'%s': 'sort of import'}) }}" class="{{ sort.sortOfImport.class }}">{{ __('Sort of import') }}</a>
+                </th>
+                <th id="hAdditionalFilter" scope="col" class="text-left">
+                    <a href="{{ sort.additionalFilter.url }}" title="{{ __f('Sort by %s', {'%s': 'additional filter'}) }}" class="{{ sort.additionalFilter.class }}">{{ __('Additional filter') }}</a>
+                </th>
+                <th id="hIncludeReviewSummary" scope="col" class="text-center">
+                    <a href="{{ sort.includeReviewSummary.url }}" title="{{ __f('Sort by %s', {'%s': 'include review summary'}) }}" class="{{ sort.includeReviewSummary.class }}">{{ __('Include review summary') }}</a>
+                </th>
+                <th id="hItemPageForImport" scope="col" class="text-right">
+                    <a href="{{ sort.itemPageForImport.url }}" title="{{ __f('Sort by %s', {'%s': 'item page for import'}) }}" class="{{ sort.itemPageForImport.class }}">{{ __('Item page for import') }}</a>
+                </th>
+                <th id="hAssociateKeyOfAmazon" scope="col" class="text-left">
+                    <a href="{{ sort.associateKeyOfAmazon.url }}" title="{{ __f('Sort by %s', {'%s': 'associate key of amazon'}) }}" class="{{ sort.associateKeyOfAmazon.class }}">{{ __('Associate key of amazon') }}</a>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+        
+        {% for productClass in items %}
+            <tr>
+                {% if routeArea == 'admin' %}
+                    <td headers="hSelect" class="fixed-column text-center z-w02">
+                        <input type="checkbox" name="items[]" value="{{ productClass.getKey() }}" class="muhelper-toggle-checkbox" />
+                    </td>
+                {% endif %}
+                <td id="itemActions{{ productClass.getKey() }}" headers="hItemActions" class="fixed-column actions nowrap z-w02">
+                    {% set itemActions = knp_menu_get('MUHelperModule:ItemActionsMenu:menu', [], {entity: productClass, area: routeArea, context: 'view'}) %}
+                    <div class="dropdown">
+                        <a id="itemActions{{ productClass.getKey() }}DropDownToggle" role="button" data-toggle="dropdown" data-target="#" href="javascript:void(0);" class="hidden dropdown-toggle"><i class="fa fa-tasks"></i> <span class="caret"></span></a>
+                        {{ knp_menu_render(itemActions, {template: 'ZikulaMenuModule:Override:actions.html.twig'}) }}
+                    </div>
+                </td>
+                <td headers="hTitle" class="text-left">
+                    <a href="{{ path('muhelpermodule_productclass_' ~ routeArea ~ 'display', {'id': productClass.getId()}) }}" title="{{ __('View detail page')|e('html_attr') }}">{{ productClass.title|notifyFilters('muhelpermodule.filterhook.productclasses')|safeHtml }}</a>
+                </td>
+                <td headers="hDescription" class="text-left">
+                    {{ productClass.description|striptags|truncate(50) }}
+                </td>
+                <td headers="hGetAmazonDatas" class="text-center">
+                    {% if productClass.getAmazonDatas %}
+                        <i class="fa fa-check" title="{{ __('Yes') }}"></i>
+                    {% else %}
+                        <i class="fa fa-times" title="{{ __('No') }}"></i>
+                    {% endif %}
+                </td>
+                <td headers="hOperation" class="text-left">
+                    {{ productClass.operation }}
+                </td>
+                <td headers="hResponseGroup" class="text-left">
+                    {{ productClass.responseGroup }}
+                </td>
+                <td headers="hSearchIndex" class="text-left">
+                    {{ productClass.searchIndex }}
+                </td>
+                <td headers="hKeywordsForImport" class="text-left">
+                    {{ productClass.keywordsForImport }}
+                </td>
+                <td headers="hSortOfImport" class="text-left">
+                    {{ productClass.sortOfImport }}
+                </td>
+                <td headers="hAdditionalFilter" class="text-left">
+                    {{ productClass.additionalFilter }}
+                </td>
+                <td headers="hIncludeReviewSummary" class="text-center">
+                    {% if productClass.includeReviewSummary %}
+                        <i class="fa fa-check" title="{{ __('Yes') }}"></i>
+                    {% else %}
+                        <i class="fa fa-times" title="{{ __('No') }}"></i>
+                    {% endif %}
+                </td>
+                <td headers="hItemPageForImport" class="text-right">
+                    {{ productClass.itemPageForImport }}
+                </td>
+                <td headers="hAssociateKeyOfAmazon" class="text-left">
+                    {{ productClass.associateKeyOfAmazon }}
+                </td>
+            </tr>
+        {% else %}
+            <tr class="z-{{ routeArea == 'admin' ? 'admin' : 'data' }}tableempty">
+                <td class="text-left" colspan="{% if routeArea == 'admin' %}14{% else %}13{% endif %}">
+            {{ __('No product classes found.') }}
+              </td>
+            </tr>
+        {% endfor %}
+        
+            </tbody>
+        </table>
+        </div>
+        
+        {% if all != 1 and pager|default %}
+            {{ pager({rowcount: pager.amountOfItems, limit: pager.itemsPerPage, display: 'page', route: 'muhelpermodule_productclass_' ~ routeArea ~ 'view'}) }}
+        {% endif %}
+    {% if routeArea == 'admin' %}
+            <fieldset>
+                <label for="mUHelperModuleAction" class="col-sm-3 control-label">{{ __('With selected product classes') }}</label>
+                <div class="col-sm-6">
+                    <select id="mUHelperModuleAction" name="action" class="form-control input-sm">
+                        <option value="">{{ __('Choose action') }}</option>
+                        <option value="delete" title="{{ __('Delete content permanently.') }}">{{ __('Delete') }}</option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <input type="submit" value="{{ __('Submit') }}" class="btn btn-default btn-sm" />
+                </div>
+            </fieldset>
+        </div>
+    </form>
+    {% endif %}
+
+    {{ block('display_hooks') }}
+</div>
+{% endblock %}
+{% block page_nav_links %}
+    <p>
+        {% if canBeCreated %}
+            {% if hasPermission('MUHelperModule:ProductClass:', '::', 'ACCESS_EDIT') %}
+                {% set createTitle = __('Create product class') %}
+                <a href="{{ path('muhelpermodule_productclass_' ~ routeArea ~ 'edit') }}" title="{{ createTitle|e('html_attr') }}" class="fa fa-plus">{{ createTitle }}</a>
+            {% endif %}
+        {% endif %}
+        {% if all == 1 %}
+            {% set linkTitle = __('Back to paginated view') %}
+            <a href="{{ path('muhelpermodule_productclass_' ~ routeArea ~ 'view') }}" title="{{ linkTitle|e('html_attr') }}" class="fa fa-table">{{ linkTitle }}</a>
+        {% else %}
+            {% set linkTitle = __('Show all entries') %}
+            <a href="{{ path('muhelpermodule_productclass_' ~ routeArea ~ 'view', {all: 1}) }}" title="{{ linkTitle|e('html_attr') }}" class="fa fa-table">{{ linkTitle }}</a>
+        {% endif %}
+    </p>
+{% endblock %}
+{% block display_hooks %}
+    
+    {# here you can activate calling display hooks for the view page if you need it #}
+    {# % if routeArea != 'admin' %}
+        {% set hooks = notifyDisplayHooks(eventName='muhelpermodule.ui_hooks.productclasses.display_view', urlObject=currentUrlObject) %}
+        {% for providerArea, hook in hooks %}
+            {{ hook }}
+        {% endfor %}
+    {% endif % #}
+{% endblock %}

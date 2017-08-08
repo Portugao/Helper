@@ -1,0 +1,22 @@
+services:
+    mu_helper_module.hook_subscriber.filter_hooks.productclasses:
+        class: MU\HelperModule\HookSubscriber\ProductClassFilterHooksSubscriber
+        arguments:
+            - "@translator.default"
+        tags:
+            - { name: zikula.hook_subscriber, areaName: 'subscriber.muhelpermodule.filter_hooks.productclasses' }
+
+    mu_helper_module.hook_subscriber.form_aware_hook.productclasses:
+        class: MU\HelperModule\HookSubscriber\ProductClassFormAwareHookSubscriber
+        arguments:
+            - "@translator.default"
+        tags:
+            - { name: zikula.hook_subscriber, areaName: 'subscriber.muhelpermodule.form_aware_hook.productclasses' }
+
+    mu_helper_module.hook_subscriber.ui_hooks.productclasses:
+        class: MU\HelperModule\HookSubscriber\ProductClassUiHooksSubscriber
+        arguments:
+            - "@translator.default"
+        tags:
+            - { name: zikula.hook_subscriber, areaName: 'subscriber.muhelpermodule.ui_hooks.productclasses' }
+

@@ -1,0 +1,48 @@
+services:
+    # Form types
+    
+    mu_helper_module.form.type.productclassquicknav:
+        class: MU\HelperModule\Form\Type\QuickNavigation\ProductClassQuickNavType
+        arguments:
+            - "@translator.default"
+            - "@mu_helper_module.listentries_helper"
+        tags:
+            - { name: form.type }
+    
+    mu_helper_module.form.handler.productclass:
+        class: MU\HelperModule\Form\Handler\ProductClass\EditHandler
+        arguments:
+            - "@kernel"
+            - "@translator.default"
+            - "@form.factory"
+            - "@request_stack"
+            - "@router"
+            - "@logger"
+            - "@zikula_permissions_module.api.permission"
+            - "@zikula_users_module.current_user"
+            - "@mu_helper_module.entity_factory"
+            - "@mu_helper_module.controller_helper"
+            - "@mu_helper_module.model_helper"
+            - "@mu_helper_module.workflow_helper"
+            - "@mu_helper_module.hook_helper"
+        calls:
+            - [setLockingApi, ["@?zikula_pagelock_module.api.locking"]]
+        tags:
+            - { name: form.type }
+    
+    mu_helper_module.form.type.productclass:
+        class: MU\HelperModule\Form\Type\ProductClassType
+        arguments:
+            - "@translator.default"
+            - "@mu_helper_module.entity_factory"
+            - "@mu_helper_module.listentries_helper"
+        tags:
+            - { name: form.type }
+    
+    mu_helper_module.form.type.config:
+        class: MU\HelperModule\Form\Type\ConfigType
+        arguments:
+            - "@translator.default"
+            - "@=service('zikula_extensions_module.api.variable').getAll('MUHelperModule')"
+        tags:
+            - { name: form.type }

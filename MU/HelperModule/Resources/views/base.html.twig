@@ -1,0 +1,20 @@
+{# purpose of this template: general base layout #}
+{% block header %}
+    {{ pageAddAsset('javascript', zasset('@MUHelperModule:js/MUHelperModule.js')) }}
+{% endblock %}
+
+{% block appTitle %}
+    {{ moduleHeader('user', '', '', false, true, false, true) }}
+{% endblock %}
+
+{% block titleArea %}
+    <h2>{% block title %}{% endblock %}</h2>
+{% endblock %}
+{{ pageSetVar('title', block('pageTitle')|default(block('title'))) }}
+
+{{ showflashes() }}
+
+{% block content %}{% endblock %}
+
+{% block footer %}
+{% endblock %}

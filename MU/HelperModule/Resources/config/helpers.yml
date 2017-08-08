@@ -1,0 +1,61 @@
+services:
+    # Helper services
+    mu_helper_module.collection_filter_helper:
+        class: MU\HelperModule\Helper\CollectionFilterHelper
+        arguments:
+            - "@request_stack"
+            - "@=service('zikula_extensions_module.api.variable').get('MUHelperModule', 'showOnlyOwnEntries', false)"
+    
+    mu_helper_module.controller_helper:
+        class: MU\HelperModule\Helper\ControllerHelper
+        arguments:
+            - "@request_stack"
+            - "@form.factory"
+            - "@zikula_extensions_module.api.variable"
+            - "@mu_helper_module.entity_factory"
+            - "@mu_helper_module.collection_filter_helper"
+            - "@mu_helper_module.model_helper"
+    
+    mu_helper_module.entity_display_helper:
+        class: MU\HelperModule\Helper\EntityDisplayHelper
+        arguments:
+            - "@translator.default"
+            - "@request_stack"
+            - "@mu_helper_module.listentries_helper"
+    
+    mu_helper_module.hook_helper:
+        class: MU\HelperModule\Helper\HookHelper
+        arguments:
+            - "@hook_dispatcher"
+    
+    mu_helper_module.listentries_helper:
+        class: MU\HelperModule\Helper\ListEntriesHelper
+        arguments:
+            - "@translator.default"
+    
+    mu_helper_module.model_helper:
+        class: MU\HelperModule\Helper\ModelHelper
+        arguments:
+            - "@mu_helper_module.entity_factory"
+    
+    mu_helper_module.view_helper:
+        class: MU\HelperModule\Helper\ViewHelper
+        arguments:
+            - "@twig"
+            - "@twig.loader"
+            - "@request_stack"
+            - "@zikula_permissions_module.api.permission"
+            - "@zikula_extensions_module.api.variable"
+            - "@zikula_core.common.theme.pagevars"
+            - "@mu_helper_module.controller_helper"
+    
+    mu_helper_module.workflow_helper:
+        class: MU\HelperModule\Helper\WorkflowHelper
+        arguments:
+            - "@translator.default"
+            - "@workflow.registry"
+            - "@logger"
+            - "@zikula_permissions_module.api.permission"
+            - "@zikula_users_module.current_user"
+            - "@mu_helper_module.entity_factory"
+            - "@mu_helper_module.listentries_helper"

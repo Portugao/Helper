@@ -1,0 +1,152 @@
+application "Helper" {
+    vendor "MU"
+    author "Michael Ueberschaer"
+    email "info@homepages-mit-zikula.de"
+    url "https://homepages-mit-zikula.de"
+    prefix "helper"
+    generatorSettings {
+        settingsContainer "Settings"
+        targetCoreVersion ZK15
+        isSystemModule false
+        generateAccountApi false
+        generateSearchApi false
+        generateMailzApi false
+        generateListBlock false
+        generateModerationBlock false
+        generateListContentType false
+        generateDetailContentType false
+        generateNewsletterPlugin false
+        generateModerationPanel false
+        generatePendingContentSupport false
+        generateExternalControllerAndFinder false
+        generateScribitePlugins false
+        generateTagSupport false
+        generateMultiHookNeedles false
+        generateRssTemplates false
+        generateAtomTemplates false
+        generateCsvTemplates false
+        generateXmlTemplates false
+        generateJsonTemplates false
+        generateKmlTemplates false
+        generateIcsTemplates false
+        versionAllGeneratedFiles false
+        generatePoweredByBacklinksIntoFooterTemplates false
+    generateTests false
+        writeModelToDocs true
+        skipFiles ""
+        markFiles ""
+    }
+    entities {
+        entity "productClass" leading {
+            nameMultiple "productClasses"
+            displayPattern "#title#"
+            standardFields false
+            fields {
+                string "title",
+                text "description" {
+                    mandatory false
+                    length 5000
+                },
+                array "productDetails" {
+                    mandatory false
+                }
+            ,
+                boolean "getAmazonDatas" nullable {
+                    mandatory false
+                }
+            ,
+                string "operation"
+            {
+                    defaultValue "ItemSearch"
+                },
+                string "responseGroup" {
+                    documentation "It is possible to enter them comma seperated.\r\nPossible Values: Small, Medium, Large,\r\nBrowseNodes,Offers,OfferSummary,VariationSummary\r\n"
+                    defaultValue "BrowseNodes,Large,Offers,OfferSummary,VariationSummary"
+                },
+                string "searchIndex" {
+                    documentation "Possible values:\r\nAll, Apparel, Books,Electronics,SportingGoods\r\n"
+                defaultValue "All"
+                },
+                string "keywordsForImport" {
+                    documentation "Also a phrase, keywords without komma."
+                mandatory false
+                },
+                string "sortOfImport" {
+                    documentation "Valid values are:\r\nsalesrank,reviewrank,pricerank,inverse-pricerank,\r\n-pubdate,titlerank,-titlerank,price,-price,\r\n-publication_date,-unit-sales,relevancerank"
+                    mandatory false
+                    length 100
+                }
+            ,
+                string "additionalFilter" {
+                    documentation "comma and semicolon seperated\r\n"
+                    defaultValue "Availability,Available;BrowseNode,3024033031"
+                    mandatory false
+                },
+                boolean "includeReviewSummary" {
+                    mandatory false
+                },
+                integer "itemPageForImport" {
+                    defaultValue "5"
+                mandatory false
+                },
+                string "associateKeyOfAmazon" {
+                    mandatory false
+                    length 100
+                }
+            ,
+                date "amazonDate" nullable {
+                    mandatory false
+                    displayType NONE
+                },
+                time "amazonTime" nullable {
+                    mandatory false
+                    displayType NONE
+                },
+                integer "amountOfImport" nullable {
+                    defaultValue ""
+                    mandatory false
+                    displayType NONE
+                }
+            }
+            actions {
+                mainAction "Index",
+                viewAction "View",
+                displayAction "Display",
+                editAction "Edit"
+            ,
+                deleteAction "Delete"
+            }
+        }
+    }
+    variables {
+        varContainer "AmazonSettings" {
+            sortOrder 2
+            vars {
+                textVar "accessKey",
+                textVar "secretKey",
+                
+            textVar "associateKey"
+            ,
+                textVar "passwordForImport" {
+                    documentation "Password for import."
+                },
+                intVar "amountForImport" {
+                    documentation "Number of imports per cronjob"
+                    value "4"
+                }
+            }
+        }
+    ,
+        varContainer "displaySettings" {
+            vars {
+                textVar "textForDetailLink" {
+                    value "Bei Amazon erh�ltlich"
+                },
+                textVar "textForAddToWishlist",
+                boolVar "showPerCent" {
+                    documentation "If enabled percentage saved is shown otherwise amount saved."
+                }
+            }
+        }
+    }
+}

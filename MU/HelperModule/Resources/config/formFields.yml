@@ -1,0 +1,7 @@
+services:
+    # Form field types
+    
+    mu_helper_module.form.type.field.array:
+        class: MU\HelperModule\Form\Type\Field\ArrayType
+        tags:
+            - { name: form.type }

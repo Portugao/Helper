@@ -1,0 +1,102 @@
+{# purpose of this template: product classes display view #}
+{% set baseTemplate = app.request.query.getBoolean('raw', false) ? 'raw' : (routeArea == 'admin' ? 'adminBase' : 'base') %}
+{% extends 'MUHelperModule::' ~ baseTemplate ~ '.html.twig' %}
+{% block pageTitle %}{{ productClass|muhelpermodule_formattedTitle|default(__('Product class')) }}{% endblock %}
+{% block title %}
+    {% set templateTitle = productClass|muhelpermodule_formattedTitle|default(__('Product class')) %}
+    {{ templateTitle|notifyFilters('muhelpermodule.filter_hooks.productclasses.filter')|safeHtml }}
+    {% set itemActions = knp_menu_get('MUHelperModule:ItemActionsMenu:menu', [], {entity: productClass, area: routeArea, context: 'display'}) %}
+    <div class="dropdown">
+        <a id="itemActions{{ productClass.getKey() }}DropDownToggle" role="button" data-toggle="dropdown" data-target="#" href="javascript:void(0);" class="hidden dropdown-toggle"><i class="fa fa-tasks"></i> {{ __('Actions') }} <span class="caret"></span></a>
+        {{ knp_menu_render(itemActions, {template: 'ZikulaMenuModule:Override:actions.html.twig'}) }}
+    </div>
+{% endblock %}
+{% block admin_page_icon 'eye' %}
+{% block content %}
+    {% set isQuickView = app.request.query.getBoolean('raw', false) %}
+    <div class="muhelpermodule-productclass muhelpermodule-display">
+
+    <dl>
+        {% if productClass.title is not empty %}
+            <dt>{{ __('Title') }}</dt>
+            <dd>{{ productClass.title }}</dd>
+        {% endif %}
+        {% if productClass.description is not empty %}
+            <dt>{{ __('Description') }}</dt>
+            <dd>{{ productClass.description|safeHtml }}</dd>
+        {% endif %}
+        {% if productClass.productDetails is not empty %}
+            <dt>{{ __('Product details') }}</dt>
+            <dd>{% if productClass.productDetails is iterable and productClass.productDetails|length > 0 %}
+                <ul>
+                {% for entry in productClass.productDetails %}
+                    <li>{{ entry }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            </dd>
+        {% endif %}
+        {% if productClass.getAmazonDatas is not empty %}
+            <dt>{{ __('Get amazon datas') }}</dt>
+            <dd>{% if productClass.getAmazonDatas %}
+                <i class="fa fa-check" title="{{ __('Yes') }}"></i>
+            {% else %}
+                <i class="fa fa-times" title="{{ __('No') }}"></i>
+            {% endif %}
+            </dd>
+        {% endif %}
+        {% if productClass.operation is not empty %}
+            <dt>{{ __('Operation') }}</dt>
+            <dd>{{ productClass.operation }}</dd>
+        {% endif %}
+        {% if productClass.responseGroup is not empty %}
+            <dt>{{ __('Response group') }}</dt>
+            <dd>{{ productClass.responseGroup }}</dd>
+        {% endif %}
+        {% if productClass.searchIndex is not empty %}
+            <dt>{{ __('Search index') }}</dt>
+            <dd>{{ productClass.searchIndex }}</dd>
+        {% endif %}
+        {% if productClass.keywordsForImport is not empty %}
+            <dt>{{ __('Keywords for import') }}</dt>
+            <dd>{{ productClass.keywordsForImport }}</dd>
+        {% endif %}
+        {% if productClass.sortOfImport is not empty %}
+            <dt>{{ __('Sort of import') }}</dt>
+            <dd>{{ productClass.sortOfImport }}</dd>
+        {% endif %}
+        {% if productClass.additionalFilter is not empty %}
+            <dt>{{ __('Additional filter') }}</dt>
+            <dd>{{ productClass.additionalFilter }}</dd>
+        {% endif %}
+        {% if productClass.includeReviewSummary is not empty %}
+            <dt>{{ __('Include review summary') }}</dt>
+            <dd>{% if productClass.includeReviewSummary %}
+                <i class="fa fa-check" title="{{ __('Yes') }}"></i>
+            {% else %}
+                <i class="fa fa-times" title="{{ __('No') }}"></i>
+            {% endif %}
+            </dd>
+        {% endif %}
+        {% if productClass.itemPageForImport is not empty %}
+            <dt>{{ __('Item page for import') }}</dt>
+            <dd>{{ productClass.itemPageForImport }}</dd>
+        {% endif %}
+        {% if productClass.associateKeyOfAmazon is not empty %}
+            <dt>{{ __('Associate key of amazon') }}</dt>
+            <dd>{{ productClass.associateKeyOfAmazon }}</dd>
+        {% endif %}
+        
+    </dl>
+
+
+    {{ block('display_hooks') }}
+</div>
+{% endblock %}
+{% block display_hooks %}
+    {% set hooks = notifyDisplayHooks(eventName='muhelpermodule.ui_hooks.productclasses.display_view', id=productClass.getKey(), urlObject=currentUrlObject) %}
+    {% for providerArea, hook in hooks if providerArea != 'provider.scribite.ui_hooks.editor' %}
+        <h4>{{ providerArea }}</h4>
+        {{ hook }}
+    {% endfor %}
+{% endblock %}

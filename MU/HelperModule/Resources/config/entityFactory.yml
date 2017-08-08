@@ -1,0 +1,12 @@
+services:
+    # Entity factory
+    mu_helper_module.entity_factory:
+        class: MU\HelperModule\Entity\Factory\EntityFactory
+        arguments:
+            - "@doctrine.orm.default_entity_manager"
+            - "@mu_helper_module.entity_initialiser"
+            - "@mu_helper_module.collection_filter_helper"
+    
+    # Entity initialiser
+    mu_helper_module.entity_initialiser:
+        class: MU\HelperModule\Entity\Factory\EntityInitialiser

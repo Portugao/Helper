@@ -1,0 +1,13 @@
+services:
+    # Twig extension
+    mu_helper_module.twig_extension:
+        class: MU\HelperModule\Twig\TwigExtension
+        arguments:
+            - "@translator.default"
+            - "@zikula_extensions_module.api.variable"
+            - "@mu_helper_module.entity_display_helper"
+            - "@mu_helper_module.workflow_helper"
+            - "@mu_helper_module.listentries_helper"
+        public: false
+        tags:
+            - { name: twig.extension }

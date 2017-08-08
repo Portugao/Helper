@@ -1,0 +1,73 @@
+services:
+    # Event subscribers and listeners
+    mu_helper_module.entity_lifecycle_listener:
+        class: MU\HelperModule\Listener\EntityLifecycleListener
+        arguments:
+            - "@service_container"
+            - "@event_dispatcher"
+            - "@logger"
+        tags:
+            - { name: doctrine.event_subscriber }
+    
+    mu_helper_module.kernel_listener:
+        class: MU\HelperModule\Listener\KernelListener
+        tags:
+            - { name: kernel.event_subscriber }
+    
+    mu_helper_module.installer_listener:
+        class: MU\HelperModule\Listener\InstallerListener
+        tags:
+            - { name: kernel.event_subscriber }
+    
+    mu_helper_module.moduledispatch_listener:
+        class: MU\HelperModule\Listener\ModuleDispatchListener
+        tags:
+            - { name: kernel.event_subscriber }
+    
+    mu_helper_module.mailer_listener:
+        class: MU\HelperModule\Listener\MailerListener
+        tags:
+            - { name: kernel.event_subscriber }
+    
+    mu_helper_module.theme_listener:
+        class: MU\HelperModule\Listener\ThemeListener
+        tags:
+            - { name: kernel.event_subscriber }
+    
+    mu_helper_module.userlogin_listener:
+        class: MU\HelperModule\Listener\UserLoginListener
+        tags:
+            - { name: kernel.event_subscriber }
+    
+    mu_helper_module.userlogout_listener:
+        class: MU\HelperModule\Listener\UserLogoutListener
+        tags:
+            - { name: kernel.event_subscriber }
+    
+    mu_helper_module.user_listener:
+        class: MU\HelperModule\Listener\UserListener
+        tags:
+            - { name: kernel.event_subscriber }
+    
+    mu_helper_module.userregistration_listener:
+        class: MU\HelperModule\Listener\UserRegistrationListener
+        tags:
+            - { name: kernel.event_subscriber }
+    
+    mu_helper_module.users_listener:
+        class: MU\HelperModule\Listener\UsersListener
+        tags:
+            - { name: kernel.event_subscriber }
+    
+    mu_helper_module.group_listener:
+        class: MU\HelperModule\Listener\GroupListener
+        tags:
+            - { name: kernel.event_subscriber }
+    
+    mu_helper_module.workflow_events_listener:
+        class: MU\HelperModule\Listener\WorkflowEventsListener
+        arguments:
+            - "@zikula_permissions_module.api.permission"
+        tags:
+            - { name: kernel.event_subscriber }
+    
