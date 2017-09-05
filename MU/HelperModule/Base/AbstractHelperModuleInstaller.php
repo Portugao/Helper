@@ -52,6 +52,7 @@ abstract class AbstractHelperModuleInstaller extends AbstractExtensionInstaller
         $this->setVar('textForAddToWishlist', '');
         $this->setVar('showPerCent', false);
         $this->setVar('productClassEntriesPerPage', '10');
+        $this->setVar('enabledFinderTypes', [ 'productClass' ]);
     
         // initialisation successful
         return true;
@@ -130,14 +131,8 @@ abstract class AbstractHelperModuleInstaller extends AbstractExtensionInstaller
      */
     protected function updateModVarsTo14()
     {
-        $dbName = $this->getDbName();
         $conn = $this->getConnection();
-    
-        $conn->executeQuery("
-            UPDATE $dbName.module_vars
-            SET modname = 'MUHelperModule'
-            WHERE modname = 'Helper';
-        ");
+        $conn->update('module_vars', ['modname' => 'MUHelperModule'], ['modname' => 'Helper']);
     }
     
     /**
@@ -146,14 +141,7 @@ abstract class AbstractHelperModuleInstaller extends AbstractExtensionInstaller
     protected function updateExtensionInfoFor14()
     {
         $conn = $this->getConnection();
-        $dbName = $this->getDbName();
-    
-        $conn->executeQuery("
-            UPDATE $dbName.modules
-            SET name = 'MUHelperModule',
-                directory = 'MU/HelperModule'
-            WHERE name = 'Helper';
-        ");
+        $conn->update('modules', ['name' => 'MUHelperModule', 'directory' => 'MU/HelperModule'], ['name' => 'Helper']);
     }
     
     /**
@@ -162,12 +150,10 @@ abstract class AbstractHelperModuleInstaller extends AbstractExtensionInstaller
     protected function renamePermissionsFor14()
     {
         $conn = $this->getConnection();
-        $dbName = $this->getDbName();
-    
         $componentLength = strlen('Helper') + 1;
     
         $conn->executeQuery("
-            UPDATE $dbName.group_perms
+            UPDATE group_perms
             SET component = CONCAT('MUHelperModule', SUBSTRING(component, $componentLength))
             WHERE component LIKE 'Helper%';
         ");
@@ -179,7 +165,6 @@ abstract class AbstractHelperModuleInstaller extends AbstractExtensionInstaller
     protected function renameTablesFor14()
     {
         $conn = $this->getConnection();
-        $dbName = $this->getDbName();
     
         $oldPrefix = 'helper_';
         $oldPrefixLength = strlen($oldPrefix);
@@ -196,8 +181,8 @@ abstract class AbstractHelperModuleInstaller extends AbstractExtensionInstaller
             $newTableName = str_replace($oldPrefix, $newPrefix, $tableName);
     
             $conn->executeQuery("
-                RENAME TABLE $dbName.$tableName
-                TO $dbName.$newTableName;
+                RENAME TABLE $tableName
+                TO $newTableName;
             ");
         }
     }
@@ -216,49 +201,32 @@ abstract class AbstractHelperModuleInstaller extends AbstractExtensionInstaller
     protected function updateHookNamesFor14()
     {
         $conn = $this->getConnection();
-        $dbName = $this->getDbName();
     
-        $conn->executeQuery("
-            UPDATE $dbName.hook_area
-            SET owner = 'MUHelperModule'
-            WHERE owner = 'Helper';
-        ");
+        $conn->update('hook_area', ['owner' => 'MUHelperModule'], ['owner' => 'Helper']);
     
         $componentLength = strlen('subscriber.helper') + 1;
         $conn->executeQuery("
-            UPDATE $dbName.hook_area
+            UPDATE hook_area
             SET areaname = CONCAT('subscriber.muhelpermodule', SUBSTRING(areaname, $componentLength))
             WHERE areaname LIKE 'subscriber.helper%';
         ");
     
-        $conn->executeQuery("
-            UPDATE $dbName.hook_binding
-            SET sowner = 'MUHelperModule'
-            WHERE sowner = 'Helper';
-        ");
+        $conn->update('hook_binding', ['sowner' => 'MUHelperModule'], ['sowner' => 'Helper']);
     
-        $conn->executeQuery("
-            UPDATE $dbName.hook_runtime
-            SET sowner = 'MUHelperModule'
-            WHERE sowner = 'Helper';
-        ");
+        $conn->update('hook_runtime', ['sowner' => 'MUHelperModule'], ['sowner' => 'Helper']);
     
         $componentLength = strlen('helper') + 1;
         $conn->executeQuery("
-            UPDATE $dbName.hook_runtime
+            UPDATE hook_runtime
             SET eventname = CONCAT('muhelpermodule', SUBSTRING(eventname, $componentLength))
             WHERE eventname LIKE 'helper%';
         ");
     
-        $conn->executeQuery("
-            UPDATE $dbName.hook_subscriber
-            SET owner = 'MUHelperModule'
-            WHERE owner = 'Helper';
-        ");
+        $conn->update('hook_subscriber', ['owner' => 'MUHelperModule'], ['owner' => 'Helper']);
     
         $componentLength = strlen('helper') + 1;
         $conn->executeQuery("
-            UPDATE $dbName.hook_subscriber
+            UPDATE hook_subscriber
             SET eventname = CONCAT('muhelpermodule', SUBSTRING(eventname, $componentLength))
             WHERE eventname LIKE 'helper%';
         ");
@@ -270,13 +238,8 @@ abstract class AbstractHelperModuleInstaller extends AbstractExtensionInstaller
     protected function updateWorkflowsFor14()
     {
         $conn = $this->getConnection();
-        $dbName = $this->getDbName();
-    
-        $conn->executeQuery("
-            UPDATE $dbName.workflows
-            SET module = 'MUHelperModule'
-            WHERE module = 'Helper';
-        ");
+        $conn->update('workflows', ['module' => 'MUHelperModule'], ['module' => 'Helper']);
+        $conn->update('workflows', ['obj_table' => 'ProductClassEntity'], ['module' => 'MUHelperModule', 'obj_table' => 'productClass']);
     }
     
     /**
@@ -287,19 +250,8 @@ abstract class AbstractHelperModuleInstaller extends AbstractExtensionInstaller
     protected function getConnection()
     {
         $entityManager = $this->container->get('doctrine.orm.default_entity_manager');
-        $connection = $entityManager->getConnection();
     
-        return $connection;
-    }
-    
-    /**
-     * Returns the name of the default system database.
-     *
-     * @return string the database name
-     */
-    protected function getDbName()
-    {
-        return $this->container->getParameter('database_name');
+        return $entityManager->getConnection();
     }
     
     /**

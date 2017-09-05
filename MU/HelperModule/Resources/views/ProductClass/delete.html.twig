@@ -35,13 +35,5 @@
     </div>
 {% endblock %}
 {% block display_hooks %}
-    {% set hooks = notifyDisplayHooks(eventName='muhelpermodule.ui_hooks.productclasses.form_delete', id=productClass.getKey()) %}
-    {% if hooks is iterable and hooks|length > 0 %}
-        {% for providerArea, hook in hooks %}
-            <fieldset>
-                {# <legend>{{ hookName }}</legend> #}
-                {{ hook }}
-            </fieldset>
-        {% endfor %}
-    {% endif %}
+    {{ notifyDisplayHooks(eventName='muhelpermodule.ui_hooks.productclasses.form_delete', id=productClass.getKey()) }}
 {% endblock %}

@@ -18,7 +18,7 @@ application "Helper" {
         generateNewsletterPlugin false
         generateModerationPanel false
         generatePendingContentSupport false
-        generateExternalControllerAndFinder false
+        generateExternalControllerAndFinder true
         generateScribitePlugins false
         generateTagSupport false
         generateMultiHookNeedles false
@@ -34,7 +34,7 @@ application "Helper" {
     generateTests false
         writeModelToDocs true
         skipFiles ""
-        markFiles ""
+        markFiles "lib/Helper/Api/Admin.php,\r\nlib/Helper/Controller/Admin.php,\r\nlib/Helper/Form/Handler/Common/Edit.php,\r\nlib/Helper/Util/Model.php,\r\ntemplates/productClass/display.tpl,\r\ntemplates/productClass/view.tpl,\r\ntemplates/user/header.tpl,\r\nstyles/style.css"
     }
     entities {
         entity "productClass" leading {

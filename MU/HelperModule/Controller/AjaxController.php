@@ -25,6 +25,23 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AjaxController extends AbstractAjaxController
 {
+    
+    /**
+     * Retrieve item list for finder selections in Forms, Content type plugin and Scribite.
+     *
+     * @Route("/getItemListFinder", options={"expose"=true})
+     * @Method("GET")
+     *
+     * @param string $ot      Name of currently used object type
+     * @param string $sort    Sorting field
+     * @param string $sortdir Sorting direction
+     *
+     * @return JsonResponse
+     */
+    public function getItemListFinderAction(Request $request)
+    {
+        return parent::getItemListFinderAction($request);
+    }
 
     // feel free to add your own ajax controller methods here
 }

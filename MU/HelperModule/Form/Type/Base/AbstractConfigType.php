@@ -14,6 +14,7 @@ namespace MU\HelperModule\Form\Type\Base;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -65,6 +66,7 @@ abstract class AbstractConfigType extends AbstractType
         $this->addAmazonSettingsFields($builder, $options);
         $this->addDisplaySettingsFields($builder, $options);
         $this->addListViewsFields($builder, $options);
+        $this->addIntegrationFields($builder, $options);
 
         $builder
             ->add('save', SubmitType::class, [
@@ -225,6 +227,35 @@ abstract class AbstractConfigType extends AbstractType
                     'maxlength' => 255,
                     'title' => $this->__('Enter the product class entries per page.') . ' ' . $this->__('Only digits are allowed.')
                 ],'scale' => 0
+            ])
+        ;
+    }
+
+    /**
+     * Adds fields for integration fields.
+     *
+     * @param FormBuilderInterface $builder The form builder
+     * @param array                $options The options
+     */
+    public function addIntegrationFields(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('enabledFinderTypes', ChoiceType::class, [
+                'label' => $this->__('Enabled finder types') . ':',
+                'label_attr' => [
+                    'class' => 'tooltips',
+                    'title' => $this->__('Which sections are supported in the Finder component (used by Scribite plug-ins).')
+                ],
+                'help' => $this->__('Which sections are supported in the Finder component (used by Scribite plug-ins).'),
+                'data' => isset($this->moduleVars['enabledFinderTypes']) ? $this->moduleVars['enabledFinderTypes'] : '',
+                'empty_data' => '',
+                'attr' => [
+                    'title' => $this->__('Choose the enabled finder types.')
+                ],'choices' => [
+                    $this->__('Product class') => 'productClass'
+                ],
+                'choices_as_values' => true,
+                'multiple' => true
             ])
         ;
     }

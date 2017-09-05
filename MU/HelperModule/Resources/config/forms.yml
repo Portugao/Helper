@@ -9,8 +9,8 @@ services:
         tags:
             - { name: form.type }
     
-    mu_helper_module.form.handler.productclass:
-        class: MU\HelperModule\Form\Handler\ProductClass\EditHandler
+    mu_helper_module.form.handler.common:
+        abstract: true
         arguments:
             - "@kernel"
             - "@translator.default"
@@ -27,8 +27,11 @@ services:
             - "@mu_helper_module.hook_helper"
         calls:
             - [setLockingApi, ["@?zikula_pagelock_module.api.locking"]]
-        tags:
-            - { name: form.type }
+    
+    
+    mu_helper_module.form.handler.productclass:
+        class: MU\HelperModule\Form\Handler\ProductClass\EditHandler
+        parent: mu_helper_module.form.handler.common
     
     mu_helper_module.form.type.productclass:
         class: MU\HelperModule\Form\Type\ProductClassType
@@ -36,6 +39,22 @@ services:
             - "@translator.default"
             - "@mu_helper_module.entity_factory"
             - "@mu_helper_module.listentries_helper"
+        tags:
+            - { name: form.type }
+    
+    mu_helper_module.form.type.block.item:
+        class: MU\HelperModule\Block\Form\Type\ItemBlockType
+        arguments:
+            - "@translator.default"
+            - "@mu_helper_module.entity_factory"
+            - "@mu_helper_module.entity_display_helper"
+        tags:
+            - { name: form.type }
+    
+    mu_helper_module.form.type.productclassfinder:
+        class: MU\HelperModule\Form\Type\Finder\ProductClassFinderType
+        arguments:
+            - "@translator.default"
         tags:
             - { name: form.type }
     

@@ -260,7 +260,7 @@ abstract class AbstractProductClassType extends AbstractType
             'empty_data' => '5',
             'attr' => [
                 'maxlength' => 11,
-                'class' => ' validate-digits',
+                'class' => '',
                 'title' => $this->__('Enter the item page for import of the product class.') . ' ' . $this->__('Only digits are allowed.')
             ],
             'required' => false,
@@ -280,19 +280,17 @@ abstract class AbstractProductClassType extends AbstractType
         
         $builder->add('amazonDate', DateType::class, [
             'label' => $this->__('Amazon date') . ':',
-            'empty_data' => '',
             'attr' => [
                 'class' => '',
                 'title' => $this->__('Enter the amazon date of the product class')
             ],
             'required' => false,
-            'empty_data' => null,
+            'empty_data' => '',
             'widget' => 'single_text'
         ]);
         
         $builder->add('amazonTime', TimeType::class, [
             'label' => $this->__('Amazon time') . ':',
-            'empty_data' => '',
             'attr' => [
                 'maxlength' => 8,
                 'class' => '',
@@ -308,7 +306,7 @@ abstract class AbstractProductClassType extends AbstractType
             'empty_data' => '',
             'attr' => [
                 'maxlength' => 11,
-                'class' => ' validate-digits',
+                'class' => '',
                 'title' => $this->__('Enter the amount of import of the product class.') . ' ' . $this->__('Only digits are allowed.')
             ],
             'required' => false,

@@ -120,7 +120,7 @@ abstract class AbstractLinkContainer implements LinkContainerInterface
             $links[] = [
                 'url' => $this->router->generate('muhelpermodule_productclass_' . $routeArea . 'view'),
                 'text' => $this->__('Product classes', 'muhelpermodule'),
-                'title' => $this->__('Product class list', 'muhelpermodule')
+                'title' => $this->__('Product classes list', 'muhelpermodule')
             ];
         }
         if ($routeArea == 'admin' && $this->permissionApi->hasPermission($this->getBundleName() . '::', '::', ACCESS_ADMIN)) {

@@ -1,0 +1,74 @@
+{# Purpose of this template: Display a popup selector of product classes for scribite integration #}
+{% set useFinder = true %}
+{% extends 'MUHelperModule::raw.html.twig' %}
+{% block title __('Search and select product class') %}
+{% block content %}
+    <div class="container">
+        <div class="zikula-bootstrap-tab-container">
+            <ul class="nav nav-tabs">
+            {% set activatedObjectTypes = getModVar('MUHelperModule', 'enabledFinderTypes', []) %}
+            {% if 'productClass' in activatedObjectTypes %}
+                <li{{ objectType == 'productClass' ? ' class="active"' : '' }}><a href="{{ path('muhelpermodule_external_finder', {objectType: 'productClass', editor: editorName}) }}" title="{{ __('Search and select product class') }}">{{ __('Product classes') }}</a></li>
+            {% endif %}
+            </ul>
+        </div>
+        {% form_theme finderForm with [
+            '@MUHelperModule/Form/bootstrap_3.html.twig',
+            'ZikulaFormExtensionBundle:Form:form_div_layout.html.twig'
+        ] %}
+        {{ form_start(finderForm, {attr: {id: 'mUHelperModuleSelectorForm'}}) }}
+        {{ form_errors(finderForm) }}
+        <fieldset>
+            <legend>{{ __('Search and select product class') }}</legend>
+            {{ form_row(finderForm.pasteAs) }}
+            <br />
+            <div class="form-group">
+                <label class="col-sm-3 control-label">{{ __('Product class') }}:</label>
+                <div class="col-sm-9">
+                    <div id="muhelpermoduleItemContainer">
+                        <ul>
+                            {% for productClass in items %}
+                                <li>
+                                    {% set itemId = productClass.getKey() %}
+                                    <a href="#" data-itemid="{{ itemId }}">
+                                        {{ productClass|muhelpermodule_formattedTitle }}
+                                    </a>
+                                    <input type="hidden" id="path{{ itemId }}" value="{{ path('muhelpermodule_productclass_display', {'id': productClass.getId()}) }}" />
+                                    <input type="hidden" id="url{{ itemId }}" value="{{ url('muhelpermodule_productclass_display', {'id': productClass.getId()}) }}" />
+                                    <input type="hidden" id="title{{ itemId }}" value="{{ productClass|muhelpermodule_formattedTitle|e('html_attr') }}" />
+                                    <input type="hidden" id="desc{{ itemId }}" value="{% set description %}{% if productClass.description is not empty %}{{ productClass.description }}{% endif %}
+                                    {% endset %}{{ description|striptags|e('html_attr') }}" />
+                                </li>
+                            {% else %}
+                                <li>{{ __('No product classes found.') }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            {{ form_row(finderForm.sort) }}
+            {{ form_row(finderForm.sortdir) }}
+            {{ form_row(finderForm.num) }}
+            {{ form_row(finderForm.q) }}
+            <div>
+                {{ pager({display: 'page', rowcount: pager.numitems, limit: pager.itemsperpage, posvar: 'pos', maxpages: 10, route: 'muhelpermodule_external_finder'}) }}
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    {{ form_widget(finderForm.update) }}
+                    {{ form_widget(finderForm.cancel) }}
+                </div>
+            </div>
+        </fieldset>
+        {{ form_end(finderForm) }}
+    </div>
+
+    {#
+    <div class="muhelpermodule-finderform">
+        <fieldset>
+            {{ render(controller('MUHelperModule:ProductClass:edit')) }}
+        </fieldset>
+    </div>
+    #}
+{% endblock %}
